@@ -60,4 +60,34 @@ app.get("/", (req, res) => {
   });
 });
 
+app.get("/menu", (req, res) => {
+  res.render("menu.ejs", {
+    restaurant: restaurant,
+  });
+});
+
+app.get("/menu/:category", (req, res) => {
+    const category = req.params.category.toLowerCase(); // Get category from URL and make lowercase
+
+    // Filter menu items by category
+    const menuItems = restaurant.menu.filter(
+      item => item.category.toLowerCase() === category
+    );
+  
+    // Capitalize the first letter of the category for better display
+    const capitalizedCategory =
+      category.charAt(0).toUpperCase() + category.slice(1);
+  
+    // Check if there are any items in the category, if not send a 404
+    // if (menuItems.length === 0) {
+    //   return res.status(404).send("Category not found");
+    // }
+  
+    // Render the category.ejs view with filtered menu items and category
+    res.render("category.ejs", {
+      menuItems: menuItems,
+      category: capitalizedCategory,
+    });
+});
+
 app.listen(3000);
